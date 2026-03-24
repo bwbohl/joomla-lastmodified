@@ -29,5 +29,6 @@
     <namespace path="src">Bwbohl\Plugin\Content\LastModified</namespace>
     <files>
         <folder plugin="lastmodified">src</folder>
+        <folder>services</folder>
     </files>
 </extension>

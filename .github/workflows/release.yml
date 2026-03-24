@@ -49,7 +49,7 @@ jobs:
           fi
 
       - name: Build ZIP
-        run: zip -r "joomla-lastmodified-${{ github.event_name == 'push' && github.ref_name || 'snapshot' }}.zip" lastmodified.xml src/
+        run: zip -r "joomla-lastmodified-${{ github.event_name == 'push' && github.ref_name || 'snapshot' }}.zip" lastmodified.xml src/ services/
 
       - name: Upload ZIP as workflow artifact
         if: github.event_name == 'pull_request'

@@ -20,6 +20,7 @@
     <description>Joomla coding standards for joomla-lastmodified</description>
 
     <file>src</file>
+    <file>services</file>
 
     <arg name="extensions" value="php"/>
     <arg name="colors"/>
