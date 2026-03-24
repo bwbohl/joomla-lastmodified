@@ -24,6 +24,7 @@ namespace Bwbohl\Plugin\Content\LastModified\Extension;
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\Database\DatabaseAwareTrait;
 
 /**
  * LastModified content plugin.
@@ -34,6 +35,8 @@ use Joomla\CMS\Plugin\CMSPlugin;
  */
 class LastModified extends CMSPlugin
 {
+	use DatabaseAwareTrait;
+
 	/**
 	 * Replaces {lastmodified} in article text with the year of the last content update.
 	 *
