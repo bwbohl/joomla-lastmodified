@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<ruleset name="joomla-lastmodified">
+    <description>Joomla coding standards for joomla-lastmodified</description>
+
+    <file>src</file>
+
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <rule ref="Joomla"/>
+</ruleset>
