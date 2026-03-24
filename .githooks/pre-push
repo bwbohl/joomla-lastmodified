@@ -1,0 +1,21 @@
+#!/bin/sh
+# Validate that <version> in lastmodified.xml matches any tag being pushed
+
+while read local_ref local_sha remote_ref remote_sha; do
+    case "$local_ref" in
+        refs/tags/*)
+            TAG="${local_ref#refs/tags/}"
+            if [ "$(git cat-file -t "$TAG")" != "tag" ]; then
+                echo "Tag '$TAG' is not an annotated tag — use 'git tag -a $TAG -m \"...\"'"
+                exit 1
+            fi
+            XML_VERSION=$(sed -n 's/.*<version>\([^<]*\)<\/version>.*/\1/p' lastmodified.xml)
+            if [ "$XML_VERSION" != "$TAG" ]; then
+                echo "Version mismatch: lastmodified.xml has '$XML_VERSION', tag is '$TAG'"
+                exit 1
+            fi
+            ;;
+    esac
+done
+
+exit 0
