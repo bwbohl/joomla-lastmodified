@@ -24,6 +24,10 @@
     },
     "minimum-stability": "alpha",
     "prefer-stable": true,
+    "scripts": {
+        "post-install-cmd": "git config core.hooksPath .githooks",
+        "post-update-cmd": "git config core.hooksPath .githooks"
+    },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
