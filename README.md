@@ -18,19 +18,19 @@
 
 # joomla-lastmodified
 
-A _Joomla!_ plugin that makes the year of the last article update available as a variable insertable in content with `{lastmodified}`.
+A _Joomla!_® plugin that makes the year of the last article update available as a variable insertable in content with `{lastmodified}`.
 
 ![PHP CodeSniffer](https://github.com/bwbohl/joomla-lastmodified/actions/workflows/phpcs.yml/badge.svg)
 
 ## Requirements
 
-- Joomla 4 or 5
+- _Joomla!_ 4 or 5
 - PHP 8.1 or higher
 
 ## Installation
 
 1. Download the latest release ZIP from the [Releases](https://github.com/bwbohl/joomla-lastmodified/releases) page
-2. In the Joomla admin panel go to **System > Install > Extensions**
+2. In the _Joomla!_ admin panel go to **System > Install > Extensions**
 3. Upload the ZIP
 4. Go to **System > Manage > Plugins**, find _Content - Last Modified_ and enable it
 
@@ -67,7 +67,7 @@ vendor/bin/phpcs   # check
 vendor/bin/phpcbf  # auto-fix
 ```
 
-The [Joomla coding standard](https://github.com/joomla/coding-standards) ruleset is enforced. The same check runs automatically via GitHub Actions on every push and pull request to `main` and `develop`.
+The [_Joomla!_ coding standard](https://github.com/joomla/coding-standards) ruleset is enforced. The same check runs automatically via GitHub Actions on every push and pull request to `main` and `develop`.
 
 ### Git hooks
 
@@ -102,5 +102,5 @@ The GitHub Actions release workflow will then create a GitHub Release with auto-
 
 ## Trademark Notice
 
-Joomla! is a registered trademark of [Open Source Matters, Inc.](https://www.opensourcematters.org/)
+_Joomla!_ is a registered trademark of [Open Source Matters, Inc.](https://www.opensourcematters.org/)
 This plugin is not affiliated with or endorsed by Open Source Matters, Inc.
