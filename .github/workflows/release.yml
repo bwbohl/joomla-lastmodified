@@ -51,6 +51,13 @@ jobs:
       - name: Build ZIP
         run: zip -r "joomla-lastmodified-${{ github.event_name == 'push' && github.ref_name || 'snapshot' }}.zip" lastmodified.xml src/
 
+      - name: Upload ZIP as workflow artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: "joomla-lastmodified-snapshot"
+          path: "joomla-lastmodified-snapshot.zip"
+
       - name: Create release with notes and upload ZIP
         if: github.event_name == 'push'
         run: |
