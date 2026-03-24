@@ -1,0 +1,93 @@
+# joomla-lastmodified
+# Copyright (C) 2026 Benjamin W. Bohl <b.w.bohl@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - "[0-9]*.[0-9]*.[0-9]*"
+  pull_request:
+    branches: [main]
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate semver tag
+        if: github.event_name == 'push'
+        run: |
+          echo "${{ github.ref_name }}" | grep -Pq '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-((0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$' \
+            || (echo "Tag '${{ github.ref_name }}' is not valid semver" && exit 1)
+
+      - name: Verify XML version matches tag
+        if: github.event_name == 'push'
+        run: |
+          XML_VERSION=$(grep -oP '(?<=<version>)[^<]+' lastmodified.xml)
+          if [ "$XML_VERSION" != "${{ github.ref_name }}" ]; then
+            echo "Version mismatch: lastmodified.xml has '$XML_VERSION', tag is '${{ github.ref_name }}'"
+            exit 1
+          fi
+
+      - name: Build ZIP
+        run: zip -r "joomla-lastmodified-${{ github.event_name == 'push' && github.ref_name || 'snapshot' }}.zip" lastmodified.xml src/ services/
+
+      - name: Upload ZIP as workflow artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: "joomla-lastmodified-snapshot"
+          path: "joomla-lastmodified-snapshot.zip"
+
+      - name: Create release with notes and upload ZIP
+        if: github.event_name == 'push'
+        run: |
+          TAG="${{ github.ref_name }}"
+
+          # --prerelease if tag has a pre-release identifier
+          PRERELEASE=""
+          echo "$TAG" | grep -Pq '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)-' && PRERELEASE="--prerelease"
+
+          # --latest: false for pre-releases; for stable, only if no higher stable tag exists
+          if [ -n "$PRERELEASE" ]; then
+            LATEST="--latest=false"
+          else
+            CURRENT_BASE=$(echo "$TAG" | grep -oP '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)')
+            HIGHEST_PREV=$(git tag --list \
+              | grep -Px '(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)' \
+              | grep -v "^$TAG$" \
+              | sort -V | tail -1)
+            if [ -z "$HIGHEST_PREV" ] || [ "$(printf '%s\n%s' "$CURRENT_BASE" "$HIGHEST_PREV" | sort -V | tail -1)" = "$CURRENT_BASE" ]; then
+              LATEST="--latest"
+            else
+              LATEST="--latest=false"
+            fi
+          fi
+
+          gh release create "$TAG" joomla-lastmodified-"$TAG".zip \
+            --generate-notes \
+            --verify-tag \
+            --fail-on-no-commits \
+            $PRERELEASE \
+            $LATEST
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
