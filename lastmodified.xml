@@ -24,7 +24,7 @@
     <creationDate>2026-03-24</creationDate>
     <copyright>Copyright (C) 2026 Benjamin W. Bohl. All rights reserved.</copyright>
     <license>GNU General Public License version 3 or later</license>
-    <version>1.0.0</version>
+    <version>1.0.0-develop</version>
     <description>Replaces {lastmodified} with the year of the last article change.</description>
     <namespace path="src">Bwbohl\Plugin\Content\LastModified</namespace>
     <files>
